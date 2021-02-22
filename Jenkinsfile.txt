@@ -40,5 +40,10 @@ pipeline {
                 echo 'All deployment check done'
             }
         }
+        stage('Post Deployment Check') {
+            steps {
+                echo 'Bhavya deployment check done'
+            }
+        }
     }
 }
