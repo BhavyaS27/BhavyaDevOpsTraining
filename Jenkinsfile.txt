@@ -16,12 +16,13 @@ pipeline {
         }
         stage('Quality Check') {
             steps {
-                echo 'QA verified'
+              echo 'job $(jobName)'
+                echo 'Quality Check - Done'
             }
         }
         stage('Security Check') {
             steps {
-                echo 'All security checks done'
+                echo 'SecurityCheck - Passed'
             }
         }
         stage('Build Push App') {
