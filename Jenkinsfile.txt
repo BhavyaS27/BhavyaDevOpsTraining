@@ -21,8 +21,7 @@ tools {
             }
         }
         stage('Security Check') {
-            steps {
-                dependencyCheck additionalArguments: '--scan=. --format=html', odcInstallation: 'OWASP-Dependency-Check'
+            steps {                
                 dependencyCheck additionalArguments: '--scan=. --format=HTML', odcInstallation: 'OWASP-Dependency-Check'
                 echo 'SecurityCheck - Passed'
             }
