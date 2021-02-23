@@ -1,41 +1,38 @@
 pipeline {
     agent any
-    tools {
-        maven 'maven_3.6.3'
+tools { 
+            maven 'Maven3.6.3' 
     }
-
+ 
     stages {
-
-        stage('Initialize') {
-            steps {
-                echo "PATH = ${PATH}"
-                echo "M2_HOME = ${M2_HOME}"
-            }
-        }
-
         stage('Checkout') {
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [[$class: 'CheckoutOption', timeout: 5], [$class: 'CloneOption', noTags: false, reference: '', shallow: false, timeout: 5]], userRemoteConfigs: [[url: 'https://github.com/j-huidrom/devops.git']]])
+            steps {        
+            checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/BhavyaS27/BhavyaDevOpsTraining.git']]])
 
-                echo 'Checkout source code from git'
+ 
+
+             echo 'Checkout source code from git'
             }
         }
         stage('Quality Check') {
             steps {
-                echo 'QA verified'
+              echo "job ${jobName}"
+                echo 'Quality Check - Done'
             }
         }
         stage('Security Check') {
             steps {
+                dependencyCheck additionalArguments: '--scan=. --format=html', odcInstallation: 'OWASP-Dependency-Check'
                 dependencyCheck additionalArguments: '--scan=. --format=HTML', odcInstallation: 'OWASP-Dependency-Check'
-                echo 'All security checks done'
+                echo 'SecurityCheck - Passed'
             }
         }
         stage('Build Push App') {
             steps {
-                sh "mvn clean install"
-            }
-        }   
+               sh "mvn clean install"        
+        }
+        }    
+        
         stage('Kill previous deploy ment') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
