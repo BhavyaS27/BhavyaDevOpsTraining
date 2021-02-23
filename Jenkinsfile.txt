@@ -33,7 +33,7 @@ tools {
         }
         }    
         
-        stage('Kill previous deployment') {
+        stage('Kill previous deploy ment') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
                     sh "fuser -k 8083/tcp"
