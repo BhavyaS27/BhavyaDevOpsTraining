@@ -59,7 +59,7 @@ pipeline{
 		stage('Notification') { 
              steps {
 				echo 'Send Test Results Email and Teams Notificataion' 
-				emailext attachLog: true, body: 'Hello', subject: 'Test Results', to: 'ram.s.yadav@fisglobal.com'
+				emailext attachLog: true, body: 'Hello', subject: 'Test Results', to: 'bhavya.saini@fisglobal.com'
 			}
 			} 
      } 
