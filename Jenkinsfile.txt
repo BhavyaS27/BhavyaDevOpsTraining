@@ -47,7 +47,7 @@ pipeline{
 		 
 		 stage ("wait_for_testing"){
 		  steps  {
-			   sh 'sleep 900'
+			   sh 'sleep 100'
 			}
 			}
 			
