@@ -45,9 +45,10 @@ pipeline{
              } 
          } 
 		 
-		 stage ("wait_for_testing")
-			{
+		 stage ("wait_for_testing"){
+		  steps  {
 			   sh 'sleep 900'
+			}
 			}
 			
          stage('Deploy') { 
