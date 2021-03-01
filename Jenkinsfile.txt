@@ -16,7 +16,7 @@ pipeline{
                   echo 'Checkout source code from git' 
              } 
          } 
-		 stage('Parallel Quality and Security Check') { 
+		 stage('Parallel Run') { 
 		 parallel {
 				stage('Quality Check') { 
 					steps {
@@ -37,7 +37,7 @@ pipeline{
                  sh "mvn clean install" 
              } 
          }    
-         stage('Kill previous deployment') { 
+         stage('Kill previous deploy ment') { 
              steps { 
                  catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') { 
                      sh "fuser -k 8083/tcp" 
