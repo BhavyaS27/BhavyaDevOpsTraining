@@ -9,30 +9,37 @@ tools {
             steps {        
             checkout([$class: 'GitSCM', branches: [[name: 'main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/BhavyaS27/BhavyaDevOpsTraining.git']]])
 
- 
 
              echo 'Checkout source code from git'
             }
         }
-        stage('Quality Check') {
-            steps {
-              echo "job ${jobName}"
+		
+		stage(' Parallel Quality and Security Check') {
+        parallel {
+        	stage('Quality Check'){
+        	 agent any 
+             steps {
+            	sh '/usr/local/bin/newman -v'
+				echo "job ${jobName}"
                 echo 'Quality Check - Done'
-            }
-        }
+           		 }
+               }
         stage('Security Check') {
-            steps {                
+            steps {               
                 dependencyCheck additionalArguments: '--scan=. --format=HTML', odcInstallation: 'OWASP-Dependency-Check'
                 echo 'SecurityCheck - Passed'
+             }
             }
+          }
         }
+
         stage('Build Push App') {
             steps {
                sh "mvn clean install"        
         }
         }    
         
-        stage('Kill previous deploy ment') {
+                stage('Kill previous deployment') {
             steps {
                 catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {
                     sh "fuser -k 8083/tcp"
@@ -48,8 +55,28 @@ tools {
         }
         stage('Post Deployment Check') {
             steps {
+                sh "/usr/local/bin/newman run abhinav_collection_1.postman_collection.json -r html,cli"
                 echo 'All deployment check done'
             }
         }
+        
     }
+  post {
+    always {
+	emailext mimeType: 'text/html',
+        subject: "Jenkins Build ${currentBuild.currentResult}: Job ${env.JOB_NAME}",
+        body: """
+          <html><body>
+          <div>Job: ${env.JOB_NAME}</div>
+          <div>Build ID: ${env.BUILD_NUMBER}</div>
+          <div>Status: ${currentBuild.currentResult}</div>
+          <div>More info at: ${env.BUILD_URL}</div>
+          </body></html>
+        """,
+        to: """bhavya.saini@fisglobal.com""",
+        attachLog: true,
+        compressLog: false,
+        recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']]
+}
+}
 }
