@@ -19,7 +19,7 @@ tools {
         	stage('Quality Check'){
         	 agent any 
              steps {
-            	sh '/usr/local/bin/newman -v'
+            	
 				echo "job ${jobName}"
                 echo 'Quality Check - Done'
            		 }
@@ -45,20 +45,21 @@ tools {
                     sh "fuser -k 8083/tcp"
                 }
             }
-        }
+        }       
 
-        stage('Deploy') {
-            steps {
-                sh "JENKINS_NODE_COOKIE=dontKillMe nohup java -jar ./target/spring-boot-rest-2-0.0.1-SNAPSHOT.jar &"
-                echo 'Deployment done'
-            }
-        }
-        stage('Post Deployment Check') {
-            steps {
-                sh "/usr/local/bin/newman run DevOpsTraining.postman_collection.json -r html,cli"
-                echo 'All deployment check done'
-            }
-        }
+stage('Deploy') {​​
+steps {​​
+sh "JENKINS_NODE_COOKIE=dontKillMe nohup java -jar ./target/spring-boot-rest-2-0.0.1-SNAPSHOT.jar &"
+echo 'Deployment done'
+}​​
+}​​
+stage('Post Deployment Check') {​​
+steps {​​
+sh "/usr/local/bin/newman run DevOpsTraining.postman_collection.json -r html,cli"
+echo 'All deployment check done'
+}​​
+}​​
+
         
     }
   post {
