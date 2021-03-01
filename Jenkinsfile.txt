@@ -14,7 +14,7 @@ tools {
             }
         }
 		
-		stage(' Parallel Quality and Security Check') {
+		stage(' Parallel Quality and Security Check parallely') {
         parallel {
         	stage('Quality Check'){
         	 agent any 
